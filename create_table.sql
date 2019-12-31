@@ -1,44 +1,36 @@
 CREATE TABLE MEDICINE(
 	m_no int primary key AUTO_INCREMENT,
-	m_name varchar(40) unique not null,
-	m_quantity int not null
+	m_name varchar(20) unique not null,
+	m_quantity int not null,
+	m_cost decimal(10,2)
 );
 
 CREATE TABLE DEPARTMENT(
     dep_no int primary key AUTO_INCREMENT,
-    dep_name varchar(40) not null
+    dep_name varchar(20) not null
 );
 
 CREATE TABLE EXM_ITEM(
     exm_no int primary key AUTO_INCREMENT,
     exm_name varchar(20) not null,
-    exm_cost decimal(10,2),
-    dep_no int,
-    constraint fk_dep_ei_no
-    foreign key (dep_no) references DEPARTMENT(dep_no)
+    exm_cost decimal(10,2)
 );
 
 CREATE TABLE TEST_ITEM(
     test_no int primary key AUTO_INCREMENT,
     test_name varchar(20) not null,
-    test_cost decimal(10,2),
-    dep_no int,
-    constraint fk_dep_ti_no
-    foreign key (dep_no) references DEPARTMENT(dep_no)
+    test_cost decimal(10,2)
 );
 
 CREATE TABLE SURGERY_ITEM(
     surg_no int primary key AUTO_INCREMENT,
     surg_name varchar(20) not null,
-    surg_cost decimal(10,2),
-    dep_no int,
-    constraint fk_dep_si_no
-    foreign key (dep_no) references DEPARTMENT(dep_no)
+    surg_cost decimal(10,2)
 );
 
 CREATE TABLE PATIENT(
-	p_name varchar(40) not null,
-	p_no int primary key AUTO_INCREMENT,
+	p_name varchar(20) not null,
+	p_no int primary key,
 	p_gender enum('male','female') not null default 'male', 
 	p_birth_date date not null, 
 	p_tel varchar(20) not null
@@ -48,7 +40,7 @@ CREATE TABLE DOCTOR(
     d_no int primary key AUTO_INCREMENT,
     d_name varchar(20) unique,
     d_gender enum('male','female') not null default 'male',
-    d_title varchar(40) not null,
+    d_title varchar(8) not null,
     dep_no int not null,
     constraint fk_dep_d_no
     foreign key (dep_no) references DEPARTMENT(dep_no),
@@ -58,8 +50,6 @@ CREATE TABLE DOCTOR(
 CREATE TABLE REGISTER(
     reg_no int primary key AUTO_INCREMENT,
     reg_date date not null,
-    p_name varchar(20) not null,
-    d_name varchar(20) not null,
     p_no int,
     constraint fk_p_r_no foreign key (p_no) references PATIENT(p_no),
     d_no int,
@@ -71,26 +61,12 @@ CREATE TABLE WARD(
     ward_cap int(8) not null,
     dep_no int,
     constraint fk_dep_w_no
-    foreign key (dep_no) references DEPARTMENT(dep_no)
+    foreign key (dep_no) references DEPARTMENT(dep_no),
+	ward_cost decimal(10,2)
 );
 
 CREATE TABLE OPERATING_ROOM(
-    room_no int primary key AUTO_INCREMENT,
-    
-    dep_no int,
-    constraint fk_dep_r_no
-    foreign key (dep_no) references DEPARTMENT(dep_no)
-);
-
-CREATE TABLE FEE(
-    fee_no int primary key not null AUTO_INCREMENT,
-    reg_no int,
-    constraint fk_f_f_no
-    foreign key (reg_no) references REGISTER(reg_no),
-    med_fee decimal(10,2) null,
-    exm_fee decimal(10,2) null,
-    test_fee decimal(10,2) null,
-    surg_fee decimal(10,2) null
+    room_no int primary key AUTO_INCREMENT
 );
 
 CREATE TABLE FORMULATION(
@@ -182,8 +158,3 @@ CREATE TABLE HOSPITALIZATION(
     hos_indate date not null,
     hos_outdate date null
 );
-
-病例与处方合并
-暂时不涉及费用
-exam test sheet中name fee删掉
-surgery sheet 加入结果列 主键变为一个自增的序号
